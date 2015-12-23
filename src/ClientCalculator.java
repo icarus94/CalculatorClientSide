@@ -44,6 +44,7 @@ public class ClientCalculator implements Runnable {
 		frame.consoleWrite("Povezivanje sa serverom...");
 		try {
 			clientSocketControl = new Socket("localhost", 13413);
+			frame.oneAtATimeON();
 			outputToServer = new PrintStream(clientSocketControl.getOutputStream());
 			inputToServer = new BufferedReader(new InputStreamReader(clientSocketControl.getInputStream()));
 			frame.consoleWrite("**Server:"+inputToServer.readLine());
@@ -84,6 +85,7 @@ public class ClientCalculator implements Runnable {
 				if(fileTransfered){
 					fileTransfered=false;
 					prozor2.resultWrite(result);
+					prozor2.oneAtTheTime2ON();
 					frame.consoleWrite("**Server:Izracunato!\n");
 				}
 				//lockcode.unlock();
@@ -91,16 +93,18 @@ public class ClientCalculator implements Runnable {
 			
 			
 		} catch (UnknownHostException e) {
-			frame.consoleWrite("\n Veza sa serverom je prekinuta \n");
+			frame.consoleWrite("\n----Veza sa serverom je prekinuta \n");
 			frame.setEnabled(true);
 			frame.requestFocus();
+			frame.oneAtATimeON();
 			if(prozor2!=null){
 				prozor2.dispose();
 			}
 		} catch (IOException e) {
-			frame.consoleWrite("\n Konekcija sa serverom nije uspela \n");
+			frame.consoleWrite("\n----Konekcija sa serverom nije uspela \n");
 			frame.setEnabled(true);
 			frame.requestFocus();
+			frame.oneAtATimeON();
 			if(prozor2!=null){
 				prozor2.dispose();
 			}

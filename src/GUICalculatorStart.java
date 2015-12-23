@@ -73,6 +73,7 @@ public class GUICalculatorStart extends JFrame {
 			btnPoveziSeSa.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					new Thread(new ClientCalculator()).start();
+					oneAtATimeOFF();
 				}
 			});
 			
@@ -83,6 +84,12 @@ public class GUICalculatorStart extends JFrame {
 			btnPoveziSeSa.setBounds(10, 46, 152, 23);
 		}
 		return btnPoveziSeSa;
+	}
+	public void oneAtATimeOFF(){
+		btnPoveziSeSa.setEnabled(false);
+	}
+	public void oneAtATimeON(){
+		btnPoveziSeSa.setEnabled(true);
 	}
 	private JButton getBtnIzadji() {
 		if (btnIzadji == null) {
@@ -122,6 +129,7 @@ public class GUICalculatorStart extends JFrame {
 	}
 	public void consoleWrite(String a){
 		textPane.setText(textPane.getText()+"\n"+a);
+		textPane.setCaretPosition(textPane.getDocument().getLength());
 	}
 
 }

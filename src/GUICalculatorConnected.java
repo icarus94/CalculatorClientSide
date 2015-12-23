@@ -124,11 +124,18 @@ public class GUICalculatorConnected extends JFrame {
 						return;
 					}
 					ClientCalculator.requestForCalculation=true;
+					oneAtTheTime2OFF();
 				}
 			});
 			btnPosaljiZahtev.setBounds(10, 227, 200, 23);
 		}
 		return btnPosaljiZahtev;
+	}
+	public void oneAtTheTime2ON(){
+		btnPosaljiZahtev.setEnabled(true);
+	}
+	public void oneAtTheTime2OFF(){
+		btnPosaljiZahtev.setEnabled(false);
 	}
 	private JButton getBtnIzadji() {
 		if (btnIzadji == null) {
@@ -229,8 +236,10 @@ public class GUICalculatorConnected extends JFrame {
 				public void keyTyped(KeyEvent arg0) {
 					char c=arg0.getKeyChar();
 					if(!Character.isDigit(c)){
-						if(!(c=='.'))
-						arg0.consume();
+						if(!(c=='.')){
+							if(!(c=='-'))
+								arg0.consume();
+						}
 					}
 				}
 			});
