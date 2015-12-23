@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class ClientCalculator implements Runnable {
@@ -35,7 +37,7 @@ public class ClientCalculator implements Runnable {
 		});
 	}
 
-	 	public void run() {
+		public void run() {
 		frame.consoleWrite("Povezivanje sa serverom...");
 		try {
 			clientSocketControl = new Socket("localhost", 1908);
@@ -48,6 +50,7 @@ public class ClientCalculator implements Runnable {
 			prozor2.requestFocus();//??????????????????????/
 			frame.setEnabled(false);
 			prozorDrugi=true;
+			Lock lockcode = new ReentrantLock();
 			while(true){ 
 				if(!prozorDrugi){
 					System.out.println("proso");
@@ -61,7 +64,8 @@ public class ClientCalculator implements Runnable {
 					clientSocketControl.close();
 					frame.setEnabled(true);
 					return;
-				}
+				} 
+				lockcode.lock();
 				if(requestForCalculation){
 					outputToServer.println("need_to_calculate");
 					requestForCalculation=false;
@@ -72,10 +76,12 @@ public class ClientCalculator implements Runnable {
 						}
 					}
 				}
+				
 				if(fileTransfered){
 					fileTransfered=false;
 					prozor2.resultWrite(result);
 				}
+				lockcode.unlock();
 			}
 			
 			

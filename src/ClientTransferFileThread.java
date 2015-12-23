@@ -23,7 +23,7 @@ public class ClientTransferFileThread extends Thread {
 		this.znak = znak;
 		this.nizBrojeva = nizBrojeva;
 	}
-	public void run(){
+	synchronized public void run(){
 		try {
 			socketFileTransfer = new Socket("localhost", 13413);
 			outputToServer = new PrintStream(socketFileTransfer.getOutputStream());
@@ -38,6 +38,7 @@ public class ClientTransferFileThread extends Thread {
 			while(true){
 				if(inputToServer.readLine().contains("numbers")){
 					dataToServer.writeObject(nizBrojeva);
+					dataToServer.close();
 					break;
 				}
 			}
