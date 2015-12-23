@@ -22,6 +22,8 @@ public class ClientCalculator implements Runnable {
 	private GUICalculatorConnected prozor2;
 	
 	
+	
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -41,38 +43,39 @@ public class ClientCalculator implements Runnable {
 		public void run() {
 		frame.consoleWrite("Povezivanje sa serverom...");
 		try {
-			clientSocketControl = new Socket("localhost", 1908);
+			clientSocketControl = new Socket("localhost", 13413);
 			outputToServer = new PrintStream(clientSocketControl.getOutputStream());
 			inputToServer = new BufferedReader(new InputStreamReader(clientSocketControl.getInputStream()));
-			frame.consoleWrite(inputToServer.readLine());
+			frame.consoleWrite("**Server:"+inputToServer.readLine());
 			prozor2 = new GUICalculatorConnected();
 			prozor2.setLocationRelativeTo(frame);
 			prozor2.setVisible(true);
-			prozor2.requestFocus();//??????????????????????/
+			prozor2.requestFocus();//??
+			prozor2.reset();
 			frame.setEnabled(false);
 			prozorDrugi=true;
 			Lock lockcode = new ReentrantLock();
-			prozor2.resultWrite("nesto");
 			while(true){ 
 				if(!prozorDrugi){
 					outputToServer.println("exit");
 					String a;
-					/*while((a=inputToServer.readLine())!=null){
-						frame.consoleWrite(a);
-					}*/
 					inputToServer.close();
 					outputToServer.close();
 					clientSocketControl.close();
 					frame.setEnabled(true);
+					frame.requestFocus();
+					frame.consoleWrite("\n ------Server napusten------ \n");
 					return;
 				} 
 				//lockcode.lock();
 				if(requestForCalculation){
 					outputToServer.println("need_to_calculate");
 					requestForCalculation=false;
+					frame.consoleWrite("Podnet zahtev za racunanje");
 					while(true){
 						if(inputToServer.readLine().contains("approved")){
 							new ClientTransferFileThread(prozor2.znak, prozor2.nizBrojeva).start();
+							frame.consoleWrite("**Server:"+"Prihvacen zahtev.\n");
 							break;
 						}
 					}
@@ -81,19 +84,26 @@ public class ClientCalculator implements Runnable {
 				if(fileTransfered){
 					fileTransfered=false;
 					prozor2.resultWrite(result);
+					frame.consoleWrite("**Server:Izracunato!\n");
 				}
 				//lockcode.unlock();
 			}
 			
 			
 		} catch (UnknownHostException e) {
-			frame.consoleWrite("Veza sa serverom je prekinuta");
+			frame.consoleWrite("\n Veza sa serverom je prekinuta \n");
 			frame.setEnabled(true);
-			prozor2.dispose();
+			frame.requestFocus();
+			if(prozor2!=null){
+				prozor2.dispose();
+			}
 		} catch (IOException e) {
-			frame.consoleWrite("Konekcija sa serverom nije uspela");
+			frame.consoleWrite("\n Konekcija sa serverom nije uspela \n");
 			frame.setEnabled(true);
-			prozor2.dispose();
+			frame.requestFocus();
+			if(prozor2!=null){
+				prozor2.dispose();
+			}
 		}
 		
 		
@@ -101,10 +111,8 @@ public class ClientCalculator implements Runnable {
 		
 		
 	 	public static void alertResponse(String a){
-	 		
 	 		result=a;
 	 		fileTransfered=true;
-	 		
 	 	}
 
 }
