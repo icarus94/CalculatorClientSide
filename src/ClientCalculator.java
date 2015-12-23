@@ -17,8 +17,9 @@ public class ClientCalculator implements Runnable {
 	private Socket clientSocketControl=null;
 	private PrintStream outputToServer=null;
 	private BufferedReader inputToServer=null;
-	private static boolean fileTransfered=false;
-	private static String result;
+	private volatile static boolean fileTransfered=false;
+	private volatile static String result;
+	private GUICalculatorConnected prozor2;
 	
 	
 
@@ -44,16 +45,16 @@ public class ClientCalculator implements Runnable {
 			outputToServer = new PrintStream(clientSocketControl.getOutputStream());
 			inputToServer = new BufferedReader(new InputStreamReader(clientSocketControl.getInputStream()));
 			frame.consoleWrite(inputToServer.readLine());
-			GUICalculatorConnected prozor2 = new GUICalculatorConnected();
+			prozor2 = new GUICalculatorConnected();
 			prozor2.setLocationRelativeTo(frame);
 			prozor2.setVisible(true);
 			prozor2.requestFocus();//??????????????????????/
 			frame.setEnabled(false);
 			prozorDrugi=true;
 			Lock lockcode = new ReentrantLock();
+			prozor2.resultWrite("nesto");
 			while(true){ 
 				if(!prozorDrugi){
-					System.out.println("proso");
 					outputToServer.println("exit");
 					String a;
 					/*while((a=inputToServer.readLine())!=null){
@@ -87,15 +88,23 @@ public class ClientCalculator implements Runnable {
 			
 		} catch (UnknownHostException e) {
 			frame.consoleWrite("Veza sa serverom je prekinuta");
+			frame.setEnabled(true);
+			prozor2.dispose();
 		} catch (IOException e) {
 			frame.consoleWrite("Konekcija sa serverom nije uspela");
+			frame.setEnabled(true);
+			prozor2.dispose();
 		}
 		
 		
 	}
-	 	synchronized public static void alertResponse(String a){
+		
+		
+	 	public static void alertResponse(String a){
+	 		
 	 		result=a;
 	 		fileTransfered=true;
+	 		
 	 	}
 
 }

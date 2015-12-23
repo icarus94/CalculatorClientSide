@@ -37,25 +37,20 @@ public class ClientTransferFileThread extends Thread {
 			}
 			while(true){
 				if(inputToServer.readLine().contains("numbers")){
-					dataToServer.writeObject(nizBrojeva);
-					dataToServer.close();
+					for (int i = 0; i < nizBrojeva.size(); i++) {
+						outputToServer.println(nizBrojeva.get(i));
+					}
+					outputToServer.println("done");
 					break;
 				}
 			}
-			while(true){
-				result=inputToServer.readLine();
-				if(result!=null)
-					break;
-			}
+			result=inputToServer.readLine();
+			
 			
 			outputToServer.println("recived");
 			ClientCalculator.alertResponse(result);
-			System.out.println(result);
-			while(true){
-				if(inputToServer.readLine()=="OK"){
-					socketFileTransfer.close();
-				}
-			}
+			
+			socketFileTransfer.close();
 			//da li treba nesto za ciscenje svih parametra
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.SwingConstants;
 
 
 public class GUICalculatorConnected extends JFrame {
@@ -206,6 +207,7 @@ public class GUICalculatorConnected extends JFrame {
 	private JTextField getTextField() {
 		if (textField == null) {
 			textField = new JTextField();
+			textField.setHorizontalAlignment(SwingConstants.CENTER);
 			textField.setEditable(false);
 			textField.setBounds(10, 182, 414, 34);
 			textField.setColumns(10);
@@ -253,7 +255,11 @@ public class GUICalculatorConnected extends JFrame {
 					double a= Double.parseDouble(textField_1.getText());
 					nizBrojeva.addFirst(a);
 					textField_1.setText(null);
-					textPane.setText(a+","+textPane.getText());
+					if(textPane.getText().isEmpty()){
+						textPane.setText(textPane.getText()+"  "+a);
+						return;
+					}
+					textPane.setText(textPane.getText()+" ; "+a);
 					
 				}
 			});
@@ -264,6 +270,7 @@ public class GUICalculatorConnected extends JFrame {
 	private JTextPane getTextPane() {
 		if (textPane == null) {
 			textPane = new JTextPane();
+			textPane.setEditable(false);
 			textPane.setBounds(224, 95, 200, 76);
 		}
 		/*String tekst="";
@@ -274,9 +281,7 @@ public class GUICalculatorConnected extends JFrame {
 		return textPane;
 	}
 	public void resultWrite(String a){
-		textField.setText(a);
-		reset();
-		
+		textField.setText(a);		
 	}
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
