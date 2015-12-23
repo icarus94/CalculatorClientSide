@@ -79,12 +79,12 @@ public class GUICalculatorConnected extends JFrame {
 		setResizable(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosed(WindowEvent arg0) {
+			synchronized public void windowClosed(WindowEvent arg0) {
 				ClientCalculator.prozorDrugi=false;
 				dispose();
 			}
 			@Override
-			public void windowClosing(WindowEvent arg0) {
+			synchronized public void windowClosing(WindowEvent arg0) {
 				ClientCalculator.prozorDrugi=false;
 				dispose();
 			}
@@ -114,7 +114,7 @@ public class GUICalculatorConnected extends JFrame {
 		if (btnPosaljiZahtev == null) {
 			btnPosaljiZahtev = new JButton("Posalji zahtev");
 			btnPosaljiZahtev.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
+				synchronized public void actionPerformed(ActionEvent arg0) {
 					if(nizBrojeva.isEmpty()){
 						JOptionPane.showMessageDialog(null,
 							    "Niste uneli ni 1 broj.. ",
@@ -133,7 +133,7 @@ public class GUICalculatorConnected extends JFrame {
 		if (btnIzadji == null) {
 			btnIzadji = new JButton("Izadji");
 			btnIzadji.addActionListener(new ActionListener() {
-					public void  actionPerformed(ActionEvent arg0) {
+				synchronized public void  actionPerformed(ActionEvent arg0) {
 					ClientCalculator.prozorDrugi=false;
 					dispose();
 					
@@ -276,16 +276,15 @@ public class GUICalculatorConnected extends JFrame {
 	}
 	public void resultWrite(String a){
 		textField.setText(a);
+		reset();
+		
 	}
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("Reset");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					textField.setText(null);
-					textField_1.setText(null);
-					textPane.setText(null);
-					nizBrojeva.clear();
+					reset();
 					//znak="+";
 					//rdbtnSabiranje.setSelected(true);
 				}
@@ -293,5 +292,13 @@ public class GUICalculatorConnected extends JFrame {
 			btnNewButton.setBounds(325, 66, 99, 23);
 		}
 		return btnNewButton;
+	}
+	public void reset(){
+		textField.setText(null);
+		textField_1.setText(null);
+		textPane.setText(null);
+		nizBrojeva.clear();
+		znak="+";
+		rdbtnSabiranje.setSelected(true);
 	}
 }

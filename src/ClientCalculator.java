@@ -15,6 +15,8 @@ public class ClientCalculator implements Runnable {
 	private Socket clientSocketControl=null;
 	private PrintStream outputToServer=null;
 	private BufferedReader inputToServer=null;
+	private static boolean fileTransfered=false;
+	private static String result;
 	
 	
 
@@ -46,14 +48,14 @@ public class ClientCalculator implements Runnable {
 			prozor2.requestFocus();//??????????????????????/
 			frame.setEnabled(false);
 			prozorDrugi=true;
-			while(true){
+			while(true){ 
 				if(!prozorDrugi){
 					System.out.println("proso");
 					outputToServer.println("exit");
 					String a;
-					while((a=inputToServer.readLine())!=null){
+					/*while((a=inputToServer.readLine())!=null){
 						frame.consoleWrite(a);
-					}
+					}*/
 					inputToServer.close();
 					outputToServer.close();
 					clientSocketControl.close();
@@ -65,10 +67,14 @@ public class ClientCalculator implements Runnable {
 					requestForCalculation=false;
 					while(true){
 						if(inputToServer.readLine().contains("approved")){
-							
+							new ClientTransferFileThread(prozor2.znak, prozor2.nizBrojeva).start();
 							break;
 						}
 					}
+				}
+				if(fileTransfered){
+					fileTransfered=false;
+					prozor2.resultWrite(result);
 				}
 			}
 			
@@ -81,5 +87,9 @@ public class ClientCalculator implements Runnable {
 		
 		
 	}
+	 	synchronized public static void alertResponse(String a){
+	 		result=a;
+	 		fileTransfered=true;
+	 	}
 
 }
