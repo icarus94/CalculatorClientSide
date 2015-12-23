@@ -49,7 +49,7 @@ public class GUICalculatorConnected extends JFrame {
 	/**
 	 * Lista brojeva za racunjanje
 	 */
-	public static LinkedList<Broj> nizBrojeva = new LinkedList<Broj>();
+	public static LinkedList<Double> nizBrojeva = new LinkedList<Double>();
 	/**
 	 * odabrani znak
 	 */
@@ -251,8 +251,7 @@ public class GUICalculatorConnected extends JFrame {
 						return;
 					}
 					double a= Double.parseDouble(textField_1.getText());
-					Broj noviBr = new Broj(a);
-					nizBrojeva.addFirst(noviBr);
+					nizBrojeva.addFirst(a);
 					textField_1.setText(null);
 					textPane.setText(a+","+textPane.getText());
 					

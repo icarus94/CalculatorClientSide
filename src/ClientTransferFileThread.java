@@ -13,12 +13,12 @@ import java.util.LinkedList;
 public class ClientTransferFileThread extends Thread {
 	String znak;
 	Socket socketFileTransfer=null;
-	LinkedList<Broj> nizBrojeva = new LinkedList<Broj>();
+	LinkedList<Double> nizBrojeva = new LinkedList<Double>();
 	BufferedReader inputToServer = null;
 	PrintStream outputToServer = null;
 	ObjectOutputStream dataToServer=null;
-	String result;
-	public ClientTransferFileThread(String znak,LinkedList<Broj> nizBrojeva) {
+	String result=null;
+	public ClientTransferFileThread(String znak,LinkedList<Double> nizBrojeva) {
 		super();
 		this.znak = znak;
 		this.nizBrojeva = nizBrojeva;
@@ -42,12 +42,20 @@ public class ClientTransferFileThread extends Thread {
 					break;
 				}
 			}
-			while((result=inputToServer.readLine())==null){
-				
+			while(true){
+				result=inputToServer.readLine();
+				if(result!=null)
+					break;
 			}
+			
 			outputToServer.println("recived");
 			ClientCalculator.alertResponse(result);
-			socketFileTransfer.close();
+			System.out.println(result);
+			while(true){
+				if(inputToServer.readLine()=="OK"){
+					socketFileTransfer.close();
+				}
+			}
 			//da li treba nesto za ciscenje svih parametra
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

@@ -10,9 +10,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 public class ClientCalculator implements Runnable {
-	public static boolean requestForCalculation = false;
-	public static boolean prozorPrvi= false;
-	public static boolean prozorDrugi= false;
+	public volatile static boolean requestForCalculation = false;
+	public volatile static boolean prozorPrvi= false;
+	public volatile static boolean prozorDrugi= false;
 	private static GUICalculatorStart frame; 
 	private Socket clientSocketControl=null;
 	private PrintStream outputToServer=null;
@@ -65,7 +65,7 @@ public class ClientCalculator implements Runnable {
 					frame.setEnabled(true);
 					return;
 				} 
-				lockcode.lock();
+				//lockcode.lock();
 				if(requestForCalculation){
 					outputToServer.println("need_to_calculate");
 					requestForCalculation=false;
@@ -81,7 +81,7 @@ public class ClientCalculator implements Runnable {
 					fileTransfered=false;
 					prozor2.resultWrite(result);
 				}
-				lockcode.unlock();
+				//lockcode.unlock();
 			}
 			
 			
